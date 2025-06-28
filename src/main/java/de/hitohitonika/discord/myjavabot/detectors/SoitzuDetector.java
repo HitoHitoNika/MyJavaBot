@@ -16,7 +16,7 @@ public class SoitzuDetector extends ListenerAdapter {
         if (messageReceivedEvent.getAuthor().getId().equals("411916575340232704")){
             soitzuCounter += 1;
             log.info("Soitzu Detected. Current Counter: {}", soitzuCounter);
-            if(soitzuCounter % 3 == 0){
+            if(soitzuCounter % 5 == 0){
                 soitzuCounter = 0;
                 messageReceivedEvent.getChannel().sendMessage("Nikita halt doch bitte mal dein Maul").queue();
             }

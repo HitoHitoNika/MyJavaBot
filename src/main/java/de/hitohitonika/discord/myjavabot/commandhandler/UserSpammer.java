@@ -1,11 +1,9 @@
-package de.hitohitonika.discord.myjavabot.detectors;
+package de.hitohitonika.discord.myjavabot.commandhandler;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
-import java.util.stream.IntStream;
 
 @Slf4j
 public class UserSpammer extends ListenerAdapter {
@@ -30,15 +28,11 @@ public class UserSpammer extends ListenerAdapter {
 
             if(message.equals(DEFAULT_MESSAGE)) {
                 for (int i = 0; i < amount; i++) {
-                    user.openPrivateChannel().queue((channel) -> {
-                        channel.sendMessage(String.format(DEFAULT_MESSAGE, event.getUser().getId())).queue();
-                    });
+                    user.openPrivateChannel().queue((channel) -> channel.sendMessage(String.format(DEFAULT_MESSAGE, event.getUser().getId())).queue());
                 }
             }else{
                 for (int i = 0; i < amount; i++) {
-                    user.openPrivateChannel().queue((channel) -> {
-                        channel.sendMessage(message).queue();
-                    });
+                    user.openPrivateChannel().queue((channel) -> channel.sendMessage(message).queue());
                 }
             }
         }
@@ -46,7 +40,8 @@ public class UserSpammer extends ListenerAdapter {
 
     private int getAmount(SlashCommandInteractionEvent event){
         try {
-            return ((int) event.getOption("amount").getAsDouble());
+            int amount = event.getOption("amount").getAsInt();
+            return Math.min(amount, 20);
         } catch (Exception e) {
             log.debug("No Amount was given, proceeds with Default");
             return DEFAULT_AMOUNT;
@@ -56,7 +51,7 @@ public class UserSpammer extends ListenerAdapter {
     private User getUser(SlashCommandInteractionEvent event){
         try {
             var user = event.getOption("target").getAsUser();
-            if(user.isBot()| user.isSystem()){
+            if(user.isBot() || user.isSystem()){
                 event.getHook().sendMessage("Kreativ, Discord erlaubt aber leider so faxen nicht 😭").queue();
                 return null;
             }
