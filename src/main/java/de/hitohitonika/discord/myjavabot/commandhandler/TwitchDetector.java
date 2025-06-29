@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 
+import java.time.Duration;
+import java.time.Instant;
+
 @Component
 @Slf4j
 public class TwitchDetector extends ListenerAdapter{
@@ -22,6 +25,8 @@ public class TwitchDetector extends ListenerAdapter{
 
     private final WebClient webClient;
     private final String twitchClientId;
+
+    private Instant lastNotificationTimestamp;
 
     public TwitchDetector(JDA jda,@Qualifier("twitchWebClient") WebClient webClient,@Value("${spring.security.oauth2.client.registration.twitch.client-id}") String twitchClientId) {
         var guild = jda.getGuildById(GUILD_ID);
@@ -40,8 +45,11 @@ public class TwitchDetector extends ListenerAdapter{
         }
     }
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 60000)
     public void checkIfLamaLive(){
+        if(lastNotificationTimestamp != null && Duration.between(lastNotificationTimestamp, Instant.now()).toHours() < 2){
+            return;
+        }
         this.webClient.get().uri(uriBuilder -> uriBuilder.path("/streams").queryParam("user_login","mr_lama_").build())
                 .header("Client-ID", twitchClientId)
                 .retrieve()
@@ -49,6 +57,9 @@ public class TwitchDetector extends ListenerAdapter{
                 .doOnSuccess(response -> {
                     if(response.contains("game_id")){
                         channel.sendMessage("LAMA IST JETZT LIVE: https://www.twitch.tv/mr_lama_").queue();
+                        lastNotificationTimestamp = Instant.now();
+                    } else {
+                        lastNotificationTimestamp = null;
                     }
                 })
                 .doOnError(WebClientException.class, error -> log.error("ALARM")).subscribe();
