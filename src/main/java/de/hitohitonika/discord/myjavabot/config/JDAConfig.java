@@ -5,9 +5,6 @@ import de.hitohitonika.discord.myjavabot.detectors.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,17 +22,19 @@ public class JDAConfig {
                 .setActivity(Activity.competing("Soitzu hate tournament"))
                 .build().awaitReady();
 
-        jda.updateCommands().addCommands(
-                Commands.slash("spotify","Spuckt den Spotify Übersicht Link aus."),
-                Commands.slash("spam","Spammed den Huan deiner Wahl voll.").addOptions(
-                        List.of(
-                                new OptionData(OptionType.USER,"target","Der Huan"),
-                                new OptionData(OptionType.STRING,"message","Die Nachricht für den Huan"),
-                                new OptionData(OptionType.INTEGER,"amount","Die Anzahl der Nachrichten für den Huan")
-                        )
-                ),
-                Commands.slash("twitch","Spuckt den Link für Hameds Twitch aus")
-        ).queue(commands -> System.out.println("REGISTRIERUNG ABGESCHLOSSEN: "+commands));
+        //DIE COMMANDS MÜSSEN NICHT IMMER NEU ERSTELLT WERDEN, DAHER AUSKOMMENTIERT.
+
+//        jda.updateCommands().addCommands(
+//                Commands.slash("spotify","Spuckt den Spotify Übersicht Link aus."),
+//                Commands.slash("spam","Spammed den Huan deiner Wahl voll.").addOptions(
+//                        List.of(
+//                                new OptionData(OptionType.USER,"target","Der Huan"),
+//                                new OptionData(OptionType.STRING,"message","Die Nachricht für den Huan"),
+//                                new OptionData(OptionType.INTEGER,"amount","Die Anzahl der Nachrichten für den Huan")
+//                        )
+//                ),
+//                Commands.slash("twitch","Spuckt den Link für Hameds Twitch aus")
+//        ).queue(commands -> System.out.println("REGISTRIERUNG ABGESCHLOSSEN: "+commands));
 
         return jda;
     }

@@ -62,7 +62,8 @@ public class TwitchDetector extends ListenerAdapter{
                         lastNotificationTimestamp = null;
                     }
                 })
-                .doOnError(WebClientException.class, error -> log.error("ALARM")).subscribe();
+                .doOnError(WebClientException.class, error -> log.error("ALARM"))
+                .subscribe();
     }
 
 }
