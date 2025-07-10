@@ -47,9 +47,17 @@ public class JDAConfig {
                                 new OptionData(OptionType.STRING,"erwartung","Wie sollte es eigentlich funktionieren ?",true),
                                 new OptionData(OptionType.STRING,"tatsächliches-verhalten","Wie äußert sich das Fehlverhalten?",true)
                         )
+                ),
+                Commands.slash("request-feature","Hier kannst du dir ein neues Feature wünschen").addOptions(
+                        List.of(
+                                new OptionData(OptionType.STRING,"anwendung", "Mit welcher Anwendung tritt das Problem auf? (Im Zweifel nimm einfach den MyJavaBot)",true).addChoices(
+                                        repos.stream().map(val -> new Command.Choice(val,val)).toList()
+                                ),
+                                new OptionData(OptionType.STRING,"title","Gib dem Feature ein kurzen, prägnanten und erklärenden Namen",true),
+                                new OptionData(OptionType.STRING,"beschreibung","Erkläre genau wie du dir vorstellst das dein Feature funktionieren soll",true)
+                        )
                 )
         ).queue(commands -> System.out.println("REGISTRIERUNG ABGESCHLOSSEN: "+commands));
-
         return jda;
     }
 }
