@@ -7,11 +7,13 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 @Component
@@ -25,25 +27,26 @@ public class SpotifyLinkCommand extends ListenerAdapter {
 
     private final static String SPECIFIC_MESSAGE = "Dein Link: https://spotify.hitohitonika.de/debts?name=%s";
 
-    private final static String GUILD_ID = "530135236680613890";
-    private final static String CHANNEL_ID = "1049290103354298420";
-
-    private final static String WUNKUS_ID = "306792892373139456";
-    private final static String HAMHAM_ID = "253896365006913536";
-    private final static String MAX_ID = "229313757975805952";
+    private final String wunkusId;
+    private final String hamhamId;
+    private final String maxId;
 
     private final WebClient webClient;
 
     private TextChannel guildChannel;
 
-    public SpotifyLinkCommand(JDA jda) {
-        var guild = jda.getGuildById(GUILD_ID);
+    public SpotifyLinkCommand(JDA jda, @Value("${discord.id.humunkulus}") String wunkus, @Value("${discord.id.hamham}") String hamham, @Value("${discord.id.max}") String max, @Value("${discord.id.lobby1}") String lobbyEinsId, @Value("${discord.id.lobby1.channel.spotify}") String spotifyChannelId, @Value("${service.spotify}") String spotifyService) throws IOException {
+        wunkusId = wunkus;
+        hamhamId = hamham;
+        maxId = max;
+
+        var guild = jda.getGuildById(lobbyEinsId);
         if(guild != null){
-            guildChannel = jda.getTextChannelById(CHANNEL_ID);
+            guildChannel = jda.getTextChannelById(spotifyChannelId);
         }
         jda.addEventListener(this);
         webClient = WebClient.builder()
-                    .baseUrl("http://192.168.0.229:8082/paymentinfo")
+                    .baseUrl(spotifyService)
                     .build();
     }
 
@@ -52,9 +55,9 @@ public class SpotifyLinkCommand extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if(event.getName().equals("spotify")){
             event.deferReply().queue();
-            if(event.getUser().getId().equals(WUNKUS_ID)){
+            if(event.getUser().getId().equals(wunkusId)){
                 event.getHook().sendMessage(SPECIFIC_MESSAGE.formatted("Lucas")).queue();
-            }else if(event.getUser().getId().equals(HAMHAM_ID)){
+            }else if(event.getUser().getId().equals(hamhamId)){
                 event.getHook().sendMessage(SPECIFIC_MESSAGE.formatted("Hamed")).queue();
             }
             event.getHook().sendMessage(SPOTIFY_URL_MESSAGE).queue();
@@ -63,7 +66,7 @@ public class SpotifyLinkCommand extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getAuthor().getId().equals(MAX_ID) && event.getMessage().getContentRaw().startsWith("###pay:")) {
+        if (event.getAuthor().getId().equals(maxId) && event.getMessage().getContentRaw().startsWith("###pay:")) {
             var messageParts = event.getMessage().getContentRaw().split(":",3);
 
             if (messageParts.length != 3) {
