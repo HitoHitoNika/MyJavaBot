@@ -1,6 +1,6 @@
 package de.hitohitonika.discord.myjavabot.config;
 
-import de.hitohitonika.discord.myjavabot.commandhandler.UserSpammer;
+import de.hitohitonika.discord.myjavabot.commandhandler.UserSpamCommandHandler;
 import de.hitohitonika.discord.myjavabot.detectors.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -22,7 +22,8 @@ public class JDAConfig {
     public JDA jda(@Value("${bot.token}")String token, @Value("${github.repos}") List<String> repos) throws InterruptedException {
         //Discord Verbindung wird erstellt, am Ende purzelt ein JDA Objekt raus - praktisch wie eine Engine zusehen.
         var jda = JDABuilder.create(token, List.of(GatewayIntent.values()))
-                .addEventListeners(new KrillDetector(),new KysDetector(), new SoitzuDetector(), new TwitterLinkDetector(),new UserSpammer(),new WunkusDetector())
+                //Es gibt ein paar Beans (SpotifyCommandHandler bspw) welche beim erstellen JDA brauchen. Diese werden JDA on init mitgegeben und nicht hier. TODO: EINHEITLICH
+                .addEventListeners(new KrillDetector(),new KysDetector(), new TwitterLinkDetector(),new UserSpamCommandHandler(),new WunkusDetector())
                 .setActivity(Activity.competing("Soitzu hate tournament"))
                 .build().awaitReady();
 

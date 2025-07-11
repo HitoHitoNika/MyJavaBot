@@ -17,7 +17,7 @@ import java.time.Instant;
 
 @Component
 @Slf4j
-public class TwitchDetector extends ListenerAdapter{
+public class TwitchCommandHandler extends ListenerAdapter{
     private final static String GUILD_ID = "530135236680613890";
     private final static String TARGET_CHANNEL_ID = "977623213053980692";
 
@@ -28,7 +28,7 @@ public class TwitchDetector extends ListenerAdapter{
 
     private Instant lastNotificationTimestamp;
 
-    public TwitchDetector(JDA jda,@Qualifier("twitchWebClient") WebClient webClient,@Value("${spring.security.oauth2.client.registration.twitch.client-id}") String twitchClientId) {
+    public TwitchCommandHandler(JDA jda, @Qualifier("twitchWebClient") WebClient webClient, @Value("${spring.security.oauth2.client.registration.twitch.client-id}") String twitchClientId) {
         var guild = jda.getGuildById(GUILD_ID);
         if(guild != null){
             channel = jda.getTextChannelById(TARGET_CHANNEL_ID);

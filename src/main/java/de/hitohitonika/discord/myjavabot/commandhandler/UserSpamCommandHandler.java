@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 @Slf4j
-public class UserSpammer extends ListenerAdapter {
+public class UserSpamCommandHandler extends ListenerAdapter {
     private final int DEFAULT_AMOUNT = 1;
     private final String DEFAULT_MESSAGE = "<@%s> will dich ficken";
     @Override

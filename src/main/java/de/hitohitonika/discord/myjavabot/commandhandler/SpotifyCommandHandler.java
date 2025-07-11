@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 @Component
 @Slf4j
-public class SpotifyLinkCommand extends ListenerAdapter {
+public class SpotifyCommandHandler extends ListenerAdapter {
     private final static String SPOTIFY_URL_MESSAGE = """
             Neuer Monat, neue Rechnung :)
             <@&1049289887146319952>
@@ -35,7 +35,7 @@ public class SpotifyLinkCommand extends ListenerAdapter {
 
     private TextChannel guildChannel;
 
-    public SpotifyLinkCommand(JDA jda, @Value("${discord.id.humunkulus}") String wunkus, @Value("${discord.id.hamham}") String hamham, @Value("${discord.id.max}") String max, @Value("${discord.id.lobby1}") String lobbyEinsId, @Value("${discord.id.lobby1.channel.spotify}") String spotifyChannelId, @Value("${service.spotify}") String spotifyService) throws IOException {
+    public SpotifyCommandHandler(JDA jda, @Value("${discord.id.humunkulus}") String wunkus, @Value("${discord.id.hamham}") String hamham, @Value("${discord.id.max}") String max, @Value("${discord.id.lobby1}") String lobbyEinsId, @Value("${discord.id.lobby1.channel.spotify}") String spotifyChannelId, @Value("${service.spotify}") String spotifyService) throws IOException {
         wunkusId = wunkus;
         hamhamId = hamham;
         maxId = max;
