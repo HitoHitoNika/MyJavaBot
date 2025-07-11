@@ -19,7 +19,7 @@ public class JDAConfig {
     @Bean
     public JDA jda(@Value("${bot.token}")String token, @Value("${github.repos}") List<String> repos) throws InterruptedException {
         //Discord Verbindung wird erstellt, am Ende purzelt ein JDA Objekt raus - praktisch wie eine Engine zusehen.
-        var jda = JDABuilder.create(token, List.of(GatewayIntent.values()))
+        var jda = JDABuilder.createLight(token, List.of(GatewayIntent.DIRECT_MESSAGES,GatewayIntent.GUILD_MESSAGES,GatewayIntent.MESSAGE_CONTENT))
                 .setActivity(Activity.competing("Soitzu hate tournament"))
                 .build().awaitReady();
 
