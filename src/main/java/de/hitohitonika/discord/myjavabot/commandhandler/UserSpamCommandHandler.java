@@ -1,14 +1,22 @@
 package de.hitohitonika.discord.myjavabot.commandhandler;
 
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class UserSpamCommandHandler extends ListenerAdapter {
     private final int DEFAULT_AMOUNT = 1;
     private final String DEFAULT_MESSAGE = "<@%s> will dich ficken";
+
+    public UserSpamCommandHandler(JDA jda) {
+        jda.addEventListener(this);
+    }
+
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if(event.getName().equals("spam")){

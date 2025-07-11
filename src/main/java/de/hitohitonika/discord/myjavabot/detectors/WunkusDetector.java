@@ -1,14 +1,17 @@
 package de.hitohitonika.discord.myjavabot.detectors;
 
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 @Slf4j
+@Component
 public class WunkusDetector extends ListenerAdapter {
     public final static List<String> CAT_GIF_URLS = List.of(
             "https://tenor.com/view/aa-uh-uh-uh-gif-11541220613235213729",
@@ -30,6 +33,10 @@ public class WunkusDetector extends ListenerAdapter {
             "https://tenor.com/view/choy-cat-meme-tik-tok-choi-gif-13813246108286362253"
     );
     private static String lastCatGifUrl = null;
+
+    public WunkusDetector(JDA jda) {
+        jda.addEventListener(this);
+    }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent messageReceivedEvent) {

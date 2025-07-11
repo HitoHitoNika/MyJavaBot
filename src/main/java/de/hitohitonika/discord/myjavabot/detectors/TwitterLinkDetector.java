@@ -1,9 +1,11 @@
 package de.hitohitonika.discord.myjavabot.detectors;
 
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,7 +15,12 @@ import java.util.Random;
 @Component
 public class TwitterLinkDetector extends ListenerAdapter {
 
-    List<String> twitterLinks = List.of("https://vxtwitter.com/","https://cunnyx.com/");
+    private final List<String> twitterLinks;
+
+    public TwitterLinkDetector(@Value("${discord.twitter.betterEmbeds}") List<String> twitterLinks, JDA jda) {
+        this.twitterLinks = twitterLinks;
+        jda.addEventListener(this);
+    }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent messageReceivedEvent) {
